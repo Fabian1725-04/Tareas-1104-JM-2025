@@ -39,39 +39,6 @@
             margin-bottom: 15px;
             font-size: 1.6em;
         }
-        .task-input-section {
-            background-color: #ecf0f1;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-        }
-        .task-input-section input[type="text"],
-        .task-input-section input[type="date"] {
-            flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #bdc3c7;
-            border-radius: 5px;
-            font-size: 1em;
-            min-width: 150px;
-        }
-        .task-input-section button {
-            background-color: #28a745;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s ease;
-            flex-shrink: 0;
-        }
-        .task-input-section button:hover {
-            background-color: #218838;
-        }
         .task-list {
             list-style: none;
             padding: 0;
@@ -83,7 +50,6 @@
             margin-bottom: 15px;
             padding: 18px 20px;
             display: flex;
-            flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
@@ -113,41 +79,6 @@
             font-size: 0.95em;
             color: #7f8c8d;
         }
-        .task-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-        .task-actions button {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: background-color 0.3s ease;
-        }
-        .task-actions .edit-btn {
-            background-color: #007bff; /* Blue */
-            color: white;
-        }
-        .task-actions .edit-btn:hover {
-            background-color: #0056b3;
-        }
-        .task-actions .delete-btn {
-            background-color: #dc3545; /* Red */
-            color: white;
-        }
-        .task-actions .delete-btn:hover {
-            background-color: #c82333;
-        }
-        .task-actions .complete-btn {
-            background-color: #17a2b8; /* Cyan */
-            color: white;
-        }
-        .task-actions .complete-btn:hover {
-            background-color: #138496;
-        }
         footer {
             text-align: center;
             margin-top: 40px;
@@ -157,21 +88,9 @@
             font-size: 0.9em;
         }
         @media (max-width: 768px) {
-            .task-input-section {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .task-input-section input,
-            .task-input-section button {
-                width: 100%;
-            }
             .task-item {
                 flex-direction: column;
                 align-items: flex-start;
-            }
-            .task-actions {
-                width: 100%;
-                justify-content: flex-end;
             }
         }
     </style>
@@ -181,15 +100,26 @@
         <h1>Tareas Pendientes - Curso 1104</h1>
         <h2>Colegio Alfonso López Michelsen</h2>
 
-        <div class="task-input-section">
-            <input type="text" id="taskInput" placeholder="Descripción de la tarea (ej: Matemáticas - Ejercicios página 45)">
-            <input type="date" id="dateInput">
-            <button onclick="addTask()">Agregar Tarea</button>
-        </div>
-
         <h2>Lista de Tareas</h2>
         <ul id="taskList" class="task-list">
-            </ul>
+            <li class="task-item">
+                <div class="task-info">
+                    <strong>Ciencias politicas y economicas - Hacer infografia</strong>
+                    <span>Fecha de entrega: 24/07/2025</span>
+                </div>
+            </li>
+            <li class="task-item">
+                <div class="task-info">
+                    <strong>Sociales - Leer capítulo 3 del libro</strong>
+                    <span>Fecha de entrega: 28/07/2025</span>
+                </div>
+            </li>
+            <li class="task-item"> <div class="task-info">
+                    <strong> - Resumen de "Cien años de soledad"</strong>
+                    <span>Fecha de entrega: 20/07/2025</span>
+                </div>
+            </li>
+        </ul>
     </div>
 
     <footer>
@@ -197,152 +127,14 @@
     </footer>
 
     <script>
-        // JavaScript para la funcionalidad de las tareas
-        const taskInput = document.getElementById('taskInput');
-        const dateInput = document.getElementById('dateInput');
-        const taskList = document.getElementById('taskList');
+        // Este JavaScript ahora solo lee las tareas del HTML
+        // y maneja la visualización básica. La edición se hace directamente en el HTML.
 
-        // Cargar tareas al iniciar
-        document.addEventListener('DOMContentLoaded', loadTasks);
-
-        function addTask() {
-            const taskText = taskInput.value.trim();
-            const taskDate = dateInput.value; // Formato YYYY-MM-DD
-
-            if (taskText === '' || taskDate === '') {
-                alert('Por favor, ingresa una descripción y una fecha para la tarea.');
-                return;
-            }
-
-            const task = {
-                text: taskText,
-                date: taskDate,
-                completed: false,
-                id: Date.now() // Un ID único para cada tarea
-            };
-
-            createTaskElement(task);
-            saveTask(task); // Guarda la tarea en localStorage
-
-            taskInput.value = '';
-            dateInput.value = '';
-        }
-
-        function createTaskElement(task) {
-            const listItem = document.createElement('li');
-            listItem.classList.add('task-item');
-            if (task.completed) {
-                listItem.classList.add('completed');
-            }
-            listItem.setAttribute('data-id', task.id);
-
-            listItem.innerHTML = `
-                <div class="task-info">
-                    <strong>${task.text}</strong>
-                    <span>Fecha de entrega: ${formatDate(task.date)}</span>
-                </div>
-                <div class="task-actions">
-                    <button class="edit-btn" onclick="editTask(this)">Editar</button>
-                    <button class="complete-btn" onclick="toggleComplete(this)">${task.completed ? 'Deshacer' : 'Completar'}</button>
-                    <button class="delete-btn" onclick="deleteTask(this)">Eliminar</button>
-                </div>
-            `;
-            taskList.appendChild(listItem);
-        }
-
-        function formatDate(dateString) {
-            const [year, month, day] = dateString.split('-');
-            return `${day}/${month}/${year}`;
-        }
-
-        function saveTask(task) {
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            tasks.push(task);
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
-
-        function updateTaskInStorage(taskId, updatedTask) {
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            tasks = tasks.map(task => task.id === taskId ? updatedTask : task);
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
-
-        function deleteTaskFromStorage(taskId) {
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            tasks = tasks.filter(task => task.id !== taskId);
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
-
-        function loadTasks() {
-            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            // Ordenar tareas: incompletas primero, luego por fecha
-            tasks.sort((a, b) => {
-                if (a.completed && !b.completed) return 1;
-                if (!a.completed && b.completed) return -1;
-                return new Date(a.date) - new Date(b.date);
-            });
-            tasks.forEach(task => createTaskElement(task));
-        }
-
-        function deleteTask(button) {
-            const listItem = button.closest('.task-item');
-            const taskId = parseInt(listItem.getAttribute('data-id'));
-            if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
-                listItem.remove();
-                deleteTaskFromStorage(taskId);
-            }
-        }
-
-        function editTask(button) {
-            const listItem = button.closest('.task-item');
-            const taskId = parseInt(listItem.getAttribute('data-id'));
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            const taskToEdit = tasks.find(task => task.id === taskId);
-
-            if (taskToEdit) {
-                const newText = prompt('Editar descripción de la tarea:', taskToEdit.text);
-                if (newText === null || newText.trim() === '') {
-                    return; // Si el usuario cancela o deja vacío
-                }
-                const newDate = prompt('Editar fecha de entrega (YYYY-MM-DD):', taskToEdit.date);
-                if (newDate === null || newDate.trim() === '') {
-                    return; // Si el usuario cancela o deja vacío
-                }
-
-                taskToEdit.text = newText.trim();
-                taskToEdit.date = newDate.trim();
-
-                // Actualizar la vista
-                listItem.querySelector('.task-info strong').textContent = newText.trim();
-                listItem.querySelector('.task-info span').textContent = `Fecha de entrega: ${formatDate(newDate.trim())}`;
-
-                updateTaskInStorage(taskId, taskToEdit);
-            }
-        }
-
-        function toggleComplete(button) {
-            const listItem = button.closest('.task-item');
-            const taskId = parseInt(listItem.getAttribute('data-id'));
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            const taskIndex = tasks.findIndex(task => task.id === taskId);
-
-            if (taskIndex !== -1) {
-                tasks[taskIndex].completed = !tasks[taskIndex].completed;
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-
-                // Actualizar la clase y el texto del botón en la vista
-                if (tasks[taskIndex].completed) {
-                    listItem.classList.add('completed');
-                    button.textContent = 'Deshacer';
-                } else {
-                    listItem.classList.remove('completed');
-                    button.textContent = 'Completar';
-                }
-                // Re-cargar las tareas para que se reordenen (completadas al final)
-                taskList.innerHTML = ''; // Limpia la lista actual
-                loadTasks(); // Vuelve a cargar y ordenar
-            }
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            // Puedes añadir aquí alguna lógica si quieres,
+            // pero la idea es que las tareas se manejen directamente en el HTML.
+            // La clase 'completed' en <li> marcará la tarea como tachada.
+        });
     </script>
 </body>
 </html>
